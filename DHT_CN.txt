@@ -1,1 +1,14 @@
-DHT(Distributed Hash Table)
+DHT(Distributed Hash Table) 关心的是找到的ip/port成员， 用UDP(using hole punching)对它们建立直接的路由。DHT仅在UDP上可以运行,所以只有在UDP工作的时候才能被使用。
+
+
+在Tox DHT中的每一个成员都有一个被称作临时DHT公钥的地址。这个地址是临时的，并且每次tox实例关闭或者重新启动的时候都会被消除。朋友的DHT公钥用onion module可以被找到，DHT被用来找到它们并且通过UDP直接连接它们。
+
+
+DHT在Tox网络中是使用UDP协议进行自我分配同方向的群体。自我分配发生在用DHT贯穿每一个成员连接x个成员的时候, toxcore 实现了32个(32 in the toxcore implementation) ,最靠近它们自己的公共密钥。通过距离方法来定义最靠近的。 2个成员的距离可以被定义为XOR(异或)，在俩个32个字节big endian格式的DHT公钥中 。
+(题外话:big endian 低地址存放最高有效字节 MSB, little endian 低地址存放最低有效字节 LSB),距离越小，也就是越接近的成员。
+
+一个DHT公钥为1的成员可能更接近一个公钥为0的成员比公钥为5的成员，因为 1 XOR 0 = 1, 1 XOR 5 = 4 , 1是比较小的，也就意味着 比起1接近于5来说 ，1更接近于0。
+
+
+
+
